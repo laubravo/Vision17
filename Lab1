@@ -21,7 +21,7 @@ Laboratorio 1 - Linux
 	-r copia la información recursivamente
 	-z comprime la información en las carpetas
 	-h el output es legible para un humano
-5. El comando diff compara dos archivos linea a linea y devuelve las diferencias entre ellos. Colordiff es una extensión de diff que hace más legible lo que devuelve la función diff con colores.
+5. El comando diff compara dos archivos linea a linea y devuelve las diferencias entre ellos. Colordiff es una extensión de diff que hace más legible lo que devuelve la función diff con colores[5][6].
 	Syntaxis: diff opciones archivo1 archivo2
 	Opciones (algunas):
 	-b ignorar cambios que solo sean de espacios
@@ -57,5 +57,6 @@ Referencias:
 [2] http://linuxcommand.org/man_pages/find1.html
 [3] https://linuxaria.com/pills/cut-shell-linux
 [4] http://www.tecmint.com/rsync-local-remote-file-synchronization-commands/
-
+[5] http://www.computerhope.com/unix/udiff.htm
+[6] https://www.cyberciti.biz/programming/color-terminal-highlighter-for-diff-files/
 
