@@ -1,4 +1,5 @@
 Laboratorio 1 - Linux
+Juan Camilo Pérez y Laura Bravo Sánchez
 
 1. El comando grep busca la coincidencia de una cadena de caracteres con los archivos especificados. 
 	Syntaxis: grep 'cadena de caracteres' dir_archivo(s)
@@ -32,11 +33,14 @@ Laboratorio 1 - Linux
 
     7.What does the tail -f command do?
 
- 8.What does the link command do?
+    8.What does the link command do?
 
     9.What is the meaning of #! /bin/bash at the start of scripts?
 
-    10.How many users exist in the course server?
+10. Para encontrar los usuarios en el servidor del curso, se necesita estar dentro de este primero. Después se pueden usar los siguientes comandos:
+--> cat /etc/passwd | grep '/home' | cut -d: -f1 esta instrucción busca en el archivo de registros del sistema, busca los usuarios que han ingresado desde la carpeta home y muestra únicamente los nombres de estos (están en el primer campo) [7]. 
+--> users Retorna los usuarios activos. Este es necesario puesto que los usuarios que la lista anterior no cuenta a los usuarios que ingresan por vision. 
+comando_inicial | wc -w cuenta las palabras en las listas que retornan los comandos anteriores.
 
     11.What command will produce a table of Users and Shells sorted by shell (tip: using cut and sort)
 
@@ -59,4 +63,5 @@ Referencias:
 [4] http://www.tecmint.com/rsync-local-remote-file-synchronization-commands/
 [5] http://www.computerhope.com/unix/udiff.htm
 [6] https://www.cyberciti.biz/programming/color-terminal-highlighter-for-diff-files/
+[7] http://www.lostsaloon.com/technology/how-to-list-all-users-in-linux/
 
