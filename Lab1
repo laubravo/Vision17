@@ -42,19 +42,24 @@ Juan Camilo Pérez y Laura Bravo Sánchez
 --> users Retorna los usuarios activos. Este es necesario puesto que los usuarios que la lista anterior no cuenta a los usuarios que ingresan por vision. 
 comando_inicial | wc -w cuenta las palabras en las listas que retornan los comandos anteriores.
 
-    11.What command will produce a table of Users and Shells sorted by shell (tip: using cut and sort)
+    11. What command will produce a table of Users and Shells sorted by shell (tip: using cut and sort)
 	cut -d: -f1,7 /etc/passwd | sort -t: -k2
 	column command
 
 
     12.Create a script for finding duplicate images based on their content (tip: hash or checksum) You may look in the internet for ideas, Do not forget to include the source of any code you use.
 
-    14.What is the disk size of the uncompressed dataset, How many images are in the directory 'BSR/BSDS500/data/images'?
-La base de datos comprimida ocupa 68M del disco duro, esto lo obtuvimos utilizando el comando du -sh BSR_bsds500.tgz, donde du encuentra el tamaño de un directorio o archivo, y las opciones sh son para que sólo muestre el tamaño total del directorio o archivo y que esta información sea legible.
+14. La base de datos comprimida ocupa 68M del disco duro, esto lo obtuvimos utilizando el comando du -sh BSR_bsds500.tgz, donde du encuentra el tamaño de un directorio o archivo, y las opciones sh son para que sólo muestre el tamaño total del directorio o archivo y que esta información sea legible[8].
 
 Para encontrar el número de imágenes en el directorio buscamos los archivos con la ruta deseada en su ruta completa, a partir de estos buscamos archivos con la extensión .jpg y del resultado contamos el núemro de líneas. El comando fue:(find .*/BSR/BSDS500/data/images -name *jpg) | wc -l
 
-    15.What is their resolution, what is their format?
+15. Las imagenes son de 481x321 o de 321x481. Están en un formato de 8-bits y sRGB. Para encontrar esto hicimos un script que contenía los siguientes comandos:
+ #!/bin/bash
+ims=$(find .*/BSR/BSDS500/data/images -name *jpg)
+for im in ${ims[*]}
+do 
+identify $im | cut -d' ' -f3,5,6
+done
 
     16.How many of them are in landscape orientation (opposed to portrait)?
 
@@ -68,4 +73,5 @@ Referencias:
 [5] http://www.computerhope.com/unix/udiff.htm
 [6] https://www.cyberciti.biz/programming/color-terminal-highlighter-for-diff-files/
 [7] http://www.lostsaloon.com/technology/how-to-list-all-users-in-linux/
+[8]http://www.linfo.org/du.html
 
