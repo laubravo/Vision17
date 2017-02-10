@@ -44,10 +44,12 @@ Juan Camilo Pérez y Laura Bravo Sánchez
 comando_inicial | wc -w cuenta las palabras en las listas que retornan los comandos anteriores.
 
 11. Para organizar en una tabla los usuarios según su bash, se corrió la siguiente instrucción estando ya logeados en el servidor del curso [11][12][13] : 
+'''
 cut -d: -f1,7 /etc/passwd | sort -t: -k2 | tr -s "/" ":" | awk -F: '{print $1 " "$2}'|column -t
+'''
 
 12. Para identificar las imágenes repetidas según su contenido se utilizó el siguiente script:
-
+'''
  #! /bin/bash
 echo "Enter the name of the directory in which the images are"
 read imageDirectory
@@ -113,22 +115,22 @@ for idx in $(seq 1 $numOfRepeatedFiles); do
 		fi
 	done
 done
-
+'''
 14. La base de datos comprimida ocupa 68M del disco duro, esto lo obtuvimos utilizando el comando du -sh BSR_bsds500.tgz, donde du encuentra el tamaño de un directorio o archivo, y las opciones sh son para que sólo muestre el tamaño total del directorio o archivo y que esta información sea legible[8].
 
 Para encontrar el número de imágenes en el directorio buscamos los archivos con la ruta deseada en su ruta completa, a partir de estos buscamos archivos con la extensión .jpg y del resultado contamos el núemro de líneas. El comando fue:(find .*/BSR/BSDS500/data/images -name *jpg) | wc -l
 
 15. Las imagenes son de 481x321 o de 321x481. Están en un formato de 8-bits y sRGB. Para encontrar esto hicimos un script que contenía los siguientes comandos:
-
+'''
  #!/bin/bash
 ims=$(find .*/BSR/BSDS500/data/images -name *jpg)
 for im in ${ims[*]}
 do 
 identify $im | cut -d' ' -f3,5,6
 done
-
+'''
 16. Para contar la cantidad de imágenes de la base de datos que están en orientación retrato o paisaje se utilizó el siguiente script:
-
+'''
  #!/bin/bash
  # This script uses imagemagick, so the system must have this program for this script to run properly
 
@@ -155,13 +157,14 @@ for currentim in ${images[*]}; do
 done
 echo There are $portrait images whose orientation is portrait
 echo There are $landscape images whose orientation is landscape
+'''
 
 La respuesta final fue:
 There are 152 images whose orientation is portrait
 There are 348 images whose orientation is landscape
 
 17. Para cortar todas las imágenes se ejecutó el siguiente script [9][10] :
-
+'''
  #!/bin/bash
  #Find all images w/ a .jpg extension in the path
 ims=$(find .*/BSR/BSDS500/data/images -name *jpg)
@@ -174,7 +177,7 @@ do
 convert $(identify $im | cut -d' ' -f1) -crop 256x256+0+0 +repage $(identify $im | cut -d' ' -f1) 
 
 done
-
+'''
 Referencias:
 [1] Gite,V. HowTo: Use grep Command In Linux / UNIX – Examples (2007). Recuperado de:https://www.cyberciti.biz/faq/howto-use-grep-command-in-linux-unix/
 [2] LinuxCommand. Find (2016). Recuperado de: http://linuxcommand.org/man_pages/find1.html
