@@ -29,13 +29,14 @@ Juan Camilo Pérez y Laura Bravo Sánchez
 	-y mostrar el output en dos columnas
 	-s reporte si son identicos los archivos
 
-6. What does the tail command do?
+6. El comando tail muestra la última parte de un archivo. Por 'default' son las últimas diez lineas del archivo de entrada. [Tomado de 'man tail']
 
-7. What does the tail -f command do?
+7. La opción '-f' hace que el comando tail no se detenga en el final del archivo, sino que espere para añadir más datos al final (append) para ser procesados po$
+ 
+8. 'link' o 'ln' crea una entrada en el directorio que está asociada con otro archivo (linked). Es decir, permite la creación de un apuntador a un archivo, así no se desperdicia memoria guardando un mismo archivo en varios lugares, sino que solo se guarda un original y el resto son archivos que apuntan al primero. 
 
-8. What does the link command do?
-
-9. What is the meaning of #! /bin/bash at the start of scripts?
+9. Es una convención para que el 'shell' sepa cuál interpretador usar al leer el archivo. Esto porque el archivo puede estar escrito en otro lenguaje, como python, perl, ruby, PHP, por lo tanto se podría tener la sintaxis '!/bin/perl'. Si no se especifica, Unix intentará leerlo como 'bash'.
+[http://stackoverflow.com/questions/8967902/why-do-you-need-to-put-bin-bash-at-the-beginning-of-a-script-file]
 
 10. Para encontrar los usuarios en el servidor del curso, se necesita estar dentro de este primero. Después se pueden usar los siguientes comandos:
 --> cat /etc/passwd | grep '/home' | cut -d: -f1 esta instrucción busca en el archivo de registros del sistema, busca los usuarios que han ingresado desde la carpeta home y muestra únicamente los nombres de estos (están en el primer campo) [7]. 
@@ -45,21 +46,115 @@ comando_inicial | wc -w cuenta las palabras en las listas que retornan los coman
 11. Para organizar en una tabla los usuarios según su bash, se corrió la siguiente instrucción estando ya logeados en el servidor del curso [11][12][13] : 
 cut -d: -f1,7 /etc/passwd | sort -t: -k2 | tr -s "/" ":" | awk -F: '{print $1 " "$2}'|column -t
 
-12. Create a script for finding duplicate images based on their content (tip: hash or checksum) You may look in the internet for ideas, Do not forget to include the source of any code you use.
+12. Para identificar las imágenes repetidas según su contenido se utilizó el siguiente script:
+
+#! /bin/bash
+echo "Enter the name of the directory in which the images are"
+read imageDirectory
+imageDirectory=./$imageDirectory
+
+# Define names to be used
+nameSumsFile=sums.txt
+nameRepeatedImgs=imgs.txt
+nameRepeatedOnesTxt=repeatedones.txt
+
+echo "Enter the type of images (eg: png, jpg, tiff, etc...)"
+read fileType
+
+# Remove .txt's from previous run of the script
+if [ -f $nameSumsFile ]; then
+	rm $nameSumsFile 
+fi
+if [ -f $nameRepeatedImgs ]; then
+	rm $nameRepeatedImgs
+fi
+if [ -f $nameRepeatedOnesTxt ]; then
+        rm $nameRepeatedOnesTxt
+fi
+
+# Count number of images before creating .txt's
+numberOfImages=$(ls -1 $imageDirectory | grep $*.$fileType | wc -l)
+echo This is the number of images I found: $numberOfImages
+
+# Fill file with all the checksums of the files
+images=$(ls -1 $imageDirectory | grep $*.$fileType)
+
+echo These are the names of the images I found: $images
+
+for currentim in ${images[*]}; do
+	md5 -q $imageDirectory/$currentim >> $nameSumsFile
+done
+
+# INFO: up to this point, there is a file that contains the checksums of all the images
+
+# Now we look for the lines of that file that arent unique (they are written in $nameRepeatedOnesTxt)
+sort $nameSumsFile | uniq -d > $nameRepeatedOnesTxt
+
+# Now that we have all the repeated checksums in a file, we can go through that file line by line and look which images correspond to that line (checksum)
+# This idea was taken from http://stackoverflow.com/questions/6022384/bash-tool-to-get-nth-line-from-a-file and http://stackoverflow.com/questions/169511/how-do-i-iterate-over-a-range-of-numbers-defined-by-variables-in-bash
+numOfRepeatedFiles=$(cat $nameRepeatedOnesTxt | wc -l)
+echo There are $numOfRepeatedFiles repeated images
+
+# Check if there are no repeated files
+if [ $numOfRepeatedFiles = 0 ]; then
+	echo "There are no repeated files!"
+	exit 1
+fi
+
+# Go line by line from the file
+for idx in $(seq 1 $numOfRepeatedFiles); do
+	# Extract a line
+	line=$(sed "${idx}q;d" $nameRepeatedOnesTxt)
+	echo Duplicates $idx >> $nameRepeatedImgs
+	for jdx in $(seq 1 $numberOfImages); do
+		otherline=$(sed "${jdx}q;d" $nameSumsFile)
+		if [ $line = $otherline ]; then
+			(echo $images | cut -d" " -f$jdx) >> $nameRepeatedImgs
+		fi
+	done
+done
 
 14. La base de datos comprimida ocupa 68M del disco duro, esto lo obtuvimos utilizando el comando du -sh BSR_bsds500.tgz, donde du encuentra el tamaño de un directorio o archivo, y las opciones sh son para que sólo muestre el tamaño total del directorio o archivo y que esta información sea legible[8].
 
 Para encontrar el número de imágenes en el directorio buscamos los archivos con la ruta deseada en su ruta completa, a partir de estos buscamos archivos con la extensión .jpg y del resultado contamos el núemro de líneas. El comando fue:(find .*/BSR/BSDS500/data/images -name *jpg) | wc -l
 
 15. Las imagenes son de 481x321 o de 321x481. Están en un formato de 8-bits y sRGB. Para encontrar esto hicimos un script que contenía los siguientes comandos:
- #!/bin/bash
+
+#!/bin/bash
 ims=$(find .*/BSR/BSDS500/data/images -name *jpg)
 for im in ${ims[*]}
 do 
 identify $im | cut -d' ' -f3,5,6
 done
 
-16. How many of them are in landscape orientation (opposed to portrait)?
+16. Para contar la cantidad de imágenes de la base de datos que están en orientación retrato o paisaje se utilizó el siguiente script:
+
+#!/bin/bash
+# This script uses imagemagick, so the system must have this program for this script to run properly
+
+# Initialize counters
+landscape=0
+portrait=0
+
+# Ask for the image type
+echo "Please enter the image format (png, tiff, jpg, etc...)"
+read fileType
+
+# Get images from the specified file type
+images=$(find .*/BSR/BSDS500/data/images -name "*.jpg")
+
+# Iterate through all the images and count
+for currentim in ${images[*]}; do
+        cols=$(identify $currentim | cut -d" " -f3 | cut -dx -f1)
+        rows=$(identify $currentim | cut -d" " -f3 | cut -dx -f2)
+        if [ $rows -ge $cols ]; then
+                portrait=$(($portrait+1))
+        else
+                landscape=$(($landscape+1))
+        fi
+done
+echo There are $portrait images whose orientation is portrait
+echo There are $landscape images whose orientation is landscape
 
 17. Para cortar todas las imágenes se ejecutó el siguiente script [9][10] :
 
