@@ -156,6 +156,10 @@ done
 echo There are $portrait images whose orientation is portrait
 echo There are $landscape images whose orientation is landscape
 
+La respuesta final fue:
+There are 152 images whose orientation is portrait
+There are 348 images whose orientation is landscape
+
 17. Para cortar todas las imágenes se ejecutó el siguiente script [9][10] :
 
  #!/bin/bash
