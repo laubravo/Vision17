@@ -48,12 +48,12 @@ cut -d: -f1,7 /etc/passwd | sort -t: -k2 | tr -s "/" ":" | awk -F: '{print $1 " 
 
 12. Para identificar las imágenes repetidas según su contenido se utilizó el siguiente script:
 
-#! /bin/bash
+ #! /bin/bash
 echo "Enter the name of the directory in which the images are"
 read imageDirectory
 imageDirectory=./$imageDirectory
 
-# Define names to be used
+ # Define names to be used
 nameSumsFile=sums.txt
 nameRepeatedImgs=imgs.txt
 nameRepeatedOnesTxt=repeatedones.txt
@@ -61,7 +61,7 @@ nameRepeatedOnesTxt=repeatedones.txt
 echo "Enter the type of images (eg: png, jpg, tiff, etc...)"
 read fileType
 
-# Remove .txt's from previous run of the script
+ # Remove .txt's from previous run of the script
 if [ -f $nameSumsFile ]; then
 	rm $nameSumsFile 
 fi
@@ -72,11 +72,11 @@ if [ -f $nameRepeatedOnesTxt ]; then
         rm $nameRepeatedOnesTxt
 fi
 
-# Count number of images before creating .txt's
+ # Count number of images before creating .txt's
 numberOfImages=$(ls -1 $imageDirectory | grep $*.$fileType | wc -l)
 echo This is the number of images I found: $numberOfImages
 
-# Fill file with all the checksums of the files
+ # Fill file with all the checksums of the files
 images=$(ls -1 $imageDirectory | grep $*.$fileType)
 
 echo These are the names of the images I found: $images
@@ -85,23 +85,23 @@ for currentim in ${images[*]}; do
 	md5 -q $imageDirectory/$currentim >> $nameSumsFile
 done
 
-# INFO: up to this point, there is a file that contains the checksums of all the images
+ # INFO: up to this point, there is a file that contains the checksums of all the images
 
-# Now we look for the lines of that file that arent unique (they are written in $nameRepeatedOnesTxt)
+ # Now we look for the lines of that file that arent unique (they are written in $nameRepeatedOnesTxt)
 sort $nameSumsFile | uniq -d > $nameRepeatedOnesTxt
 
-# Now that we have all the repeated checksums in a file, we can go through that file line by line and look which images correspond to that line (checksum)
-# This idea was taken from http://stackoverflow.com/questions/6022384/bash-tool-to-get-nth-line-from-a-file and http://stackoverflow.com/questions/169511/how-do-i-iterate-over-a-range-of-numbers-defined-by-variables-in-bash
+ # Now that we have all the repeated checksums in a file, we can go through that file line by line and look which images correspond to that line (checksum)
+ # This idea was taken from http://stackoverflow.com/questions/6022384/bash-tool-to-get-nth-line-from-a-file and http://stackoverflow.com/questions/169511/how-do-i-iterate-over-a-range-of-numbers-defined-by-variables-in-bash
 numOfRepeatedFiles=$(cat $nameRepeatedOnesTxt | wc -l)
 echo There are $numOfRepeatedFiles repeated images
 
-# Check if there are no repeated files
+ # Check if there are no repeated files
 if [ $numOfRepeatedFiles = 0 ]; then
 	echo "There are no repeated files!"
 	exit 1
 fi
 
-# Go line by line from the file
+ # Go line by line from the file
 for idx in $(seq 1 $numOfRepeatedFiles); do
 	# Extract a line
 	line=$(sed "${idx}q;d" $nameRepeatedOnesTxt)
@@ -120,7 +120,7 @@ Para encontrar el número de imágenes en el directorio buscamos los archivos co
 
 15. Las imagenes son de 481x321 o de 321x481. Están en un formato de 8-bits y sRGB. Para encontrar esto hicimos un script que contenía los siguientes comandos:
 
-#!/bin/bash
+ #!/bin/bash
 ims=$(find .*/BSR/BSDS500/data/images -name *jpg)
 for im in ${ims[*]}
 do 
@@ -129,21 +129,21 @@ done
 
 16. Para contar la cantidad de imágenes de la base de datos que están en orientación retrato o paisaje se utilizó el siguiente script:
 
-#!/bin/bash
-# This script uses imagemagick, so the system must have this program for this script to run properly
+ #!/bin/bash
+ # This script uses imagemagick, so the system must have this program for this script to run properly
 
-# Initialize counters
+ # Initialize counters
 landscape=0
 portrait=0
 
-# Ask for the image type
+ # Ask for the image type
 echo "Please enter the image format (png, tiff, jpg, etc...)"
 read fileType
 
-# Get images from the specified file type
+ # Get images from the specified file type
 images=$(find .*/BSR/BSDS500/data/images -name "*.jpg")
 
-# Iterate through all the images and count
+ # Iterate through all the images and count
 for currentim in ${images[*]}; do
         cols=$(identify $currentim | cut -d" " -f3 | cut -dx -f1)
         rows=$(identify $currentim | cut -d" " -f3 | cut -dx -f2)
@@ -159,17 +159,16 @@ echo There are $landscape images whose orientation is landscape
 17. Para cortar todas las imágenes se ejecutó el siguiente script [9][10] :
 
  #!/bin/bash
-#Find all images w/ a .jpg extension in the path
+ #Find all images w/ a .jpg extension in the path
 ims=$(find .*/BSR/BSDS500/data/images -name *jpg)
 
 for im in ${ims[*]}
 do 
 
-# the name of the current image is taken from the command identify $im | cut -d' ' -f1
-# Crop image and replace original w/o duplicates (+repage)
+ # the name of the current image is taken from the command identify $im | cut -d' ' -f1
+ # Crop image and replace original w/o duplicates (+repage)
 convert $(identify $im | cut -d' ' -f1) -crop 256x256+0+0 +repage $(identify $im | cut -d' ' -f1) 
 
-#convert $(identify $im | cut -d' ' -f1) -crop 256x256
 done
 
 Referencias:
