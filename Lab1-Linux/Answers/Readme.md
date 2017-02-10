@@ -78,17 +78,17 @@ convert $(identify $im | cut -d' ' -f1) -crop 256x256+0+0 +repage $(identify $im
 done
 
 Referencias:
-[1] https://www.cyberciti.biz/faq/howto-use-grep-command-in-linux-unix/
-[2] http://linuxcommand.org/man_pages/find1.html
-[3] https://linuxaria.com/pills/cut-shell-linux
-[4] http://www.tecmint.com/rsync-local-remote-file-synchronization-commands/
-[5] http://www.computerhope.com/unix/udiff.htm
-[6] https://www.cyberciti.biz/programming/color-terminal-highlighter-for-diff-files/
-[7] http://www.lostsaloon.com/technology/how-to-list-all-users-in-linux/
-[8] http://www.linfo.org/du.html
-[9] http://www.wizards-toolkit.org/discourse-server/viewtopic.php?t=15471
-[10] http://www.imagemagick.org/Usage/crop/#crop
-[11] http://www.tldp.org/LDP/abs/html/awk.html
-[12] https://www.cyberciti.biz/faq/bash-scripting-using-awk/
-[13] https://www.cyberciti.biz/faq/how-to-use-linux-unix-tr-command/
+[1] Gite,V. HowTo: Use grep Command In Linux / UNIX – Examples (2007). Recuperado de:https://www.cyberciti.biz/faq/howto-use-grep-command-in-linux-unix/
+[2] LinuxCommand. Find (2016). Recuperado de: http://linuxcommand.org/man_pages/find1.html
+[3] Using cut on linux terminal. Linuxaria. Recuperado de: https://linuxaria.com/pills/cut-shell-linux
+[4] Shrivastava,T. Rsync (Remote Sync): 10 Practical Examples of Rsync Command in Linux (2013). Recuperdo de: http://www.tecmint.com/rsync-local-remote-file-synchronization-commands/
+[5] Linux and Unix diff command. Computer Hope. Recuperado de: http://www.computerhope.com/unix/udiff.htm
+[6] Gite,V. Diff Command: Colorize Output On The Unix / Linux Command Line. nixCraft. (2012). Recuperdo de: https://www.cyberciti.biz/programming/color-terminal-highlighter-for-diff-files/
+[7] Barkeep. Lostsaloon. How to list users in linux?…local, remote, real and all users (2013). Recuperado de: http://www.lostsaloon.com/technology/how-to-list-all-users-in-linux/
+[8] The Linux Information Project. The du command (2007). Recuperado de: http://www.linfo.org/du.html
+[9] ImageMagick. RE: convert -crop: suppress creation of "extra" image file (2010). Recuperado de: http://www.wizards-toolkit.org/discourse-server/viewtopic.php?t=15471
+[10] Thyssen,A. ImageMagick. Crop (2016). Recuperado de: http://www.imagemagick.org/Usage/crop/#crop
+[11] Advanced Bash-Scripting Guide: Appendix C. A Sed and Awk Micro-Primer. Recuperado de: http://www.tldp.org/LDP/abs/html/awk.html
+[12] Gite, V. How To Use awk In Bash Scripting (2009). Recuperado de: https://www.cyberciti.biz/faq/bash-scripting-using-awk/
+[13]Gite, V. Understanding Linux / UNIX tr command (2007). Recuperado de: https://www.cyberciti.biz/faq/how-to-use-linux-unix-tr-command/
 
