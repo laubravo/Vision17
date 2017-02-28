@@ -18,7 +18,9 @@ for idx = 1:num_train
    test_ims{idx} = imcrop(imread(dir_train(idx).name),box);   
 end
 %% Create the filter bank to be used
-[fb] = fbCreate(8,1,2,sqrt(100000),2);
+[fb] = fbCreate(8,1,2,sqrt(2),2); 
+% to match pattern sizes, use only larger filters from 4 to 7? 
+% no more than 8 orientations needed, they start repeating themselves
 
 % Show im w/ all the filters that are being used
 numFilFilt = size(fb,1);
