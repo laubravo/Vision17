@@ -12,12 +12,7 @@ the_best = [1,1,1,4,1,5,4,4];
 % initialize gt
 num_gt = numel(gt_names);
 info = cell(num_gt,2);
-% for ind = 1:num_gt;
-%     actual = load(fullfile('Lab5Images',gt_names(the_best(ind)).name));
-%     info{ind,1} = actual.groundTruth{1}.Segmentation;
-%     actual = imread(im_names(ind).name);
-%     info{ind,2} = actual(:,:,1);
-% end
+
 %%
 % Evaluate all the methods
 methods = {'k-means', 'gmm', 'hierarchical', 'watershed'};
