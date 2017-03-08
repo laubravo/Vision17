@@ -29,7 +29,7 @@ for i = 1:numel(boolObj_gt)
     
     for method = 1:size(seg,2)
     % Find the Jaccard index of the largest objects in the segmentation
-    score(i,method) = cellfun(@(x) JIndex_seg(seg(i,method),boolObj_gt{i}));
+    score(i,method) = cellfun(@(x) JIndex_seg(x,boolObj_gt(i)),seg(i,method,:));
     end
 end
 
@@ -46,16 +46,17 @@ end
         % JINDEX_SEG calculates the jaccard index of a segmentation
         % im_seg is a segmentation for an image whose groundtruth organized
         % as a boolean array of objects is found in bObj.
-        s = zeros(length(bObj),1);
-        for idx = 1:length(bObj)
+        s = zeros(length(bObj{1}),1);
+        for idx = 1:length(bObj{1})
             % Find the main label in the segmentation
-            seg_objects = im_seg(bObj(idx));
+            seg_objects = im_seg(bObj{1}{idx});
             losObjs = unique(seg_objects);
-            [~,el_que_importa] =  max(histc(seg_objects(:), losObjs));
-            el_que_importa = losObj(el_que_importa);
-            s(idx) = numel(and(bObj(idx),im_seg(el_que_importa)))/numel(or(bObj(idx),im_seg(el_que_importa)));
+            [~,el_que_importa] =  max(histc(seg_objects, losObjs));
+            el_que_importa = losObjs(el_que_importa);
+            s(idx) = sum(sum(and(bObj{1}{idx},im_seg(el_que_importa))))/sum(sum(or(bObj{1}{idx},im_seg(el_que_importa))));
         end
         Jacc = mean(s);
     end 
 
 end
+
