@@ -15,21 +15,22 @@ n = 3; %number of objs to be evaluated in GT
 
 num_objs_gt = cellfun(@(x) max(max(x)), gt);
 % num_objs =  max(num_objs);
-
-score = zeros(numel(gt),size(seg,2));
+num_colores = size(seg,3);
+score = zeros(numel(gt),size(seg,2),num_colores);
 
 boolObj_gt = cell(size(gt));
-for i = 1:numel(boolObj_gt)
+for i = 1:length(boolObj_gt)
     for j = 1:num_objs_gt(i)
         %         boolObj_gt{i} = cellfun(@(x) x==j,gt,'UniformOutput',false); %boolean matrix of the same dims as seg.
         boolObj_gt{i}{j} = gt{i} == j;
     end
     % Take the n largest objects
-    boolObj_gt{i} = get_largest(boolObj_gt{i},n);
+    boolObj_gt{i} = get_largest(boolObj_gt{i,1},n);
     
     for method = 1:size(seg,2)
-    % Find the Jaccard index of the largest objects in the segmentation
-    score(i,method) = cellfun(@(x) JIndex_seg(x,boolObj_gt(i)),seg(i,method,:));
+        % Find the Jaccard index of the largest objects in the segmentation
+        sco = cellfun(@(x) JIndex_seg(x,boolObj_gt(i)),seg(i,method,:));    
+        score(i,method,:) = reshape(sco, 1, num_colores);
     end
 end
 
@@ -37,8 +38,8 @@ end
         % GET_LARGEST takes the n largest objects of a boolean cell array
         % boolArray: cell array with the boolean equivalents of each object
         % n: number of largest objects to consider
-        num_pixs_obj = cellfun(@numel,boolArray);
-        [~,ind_mayores] = sort(num_pixs_obj); % num_pixs_obj may be cell = cellfun
+        num_pixs_obj = cellfun(@(x) sum(sum(x)),boolArray);
+        [~,ind_mayores] = sort(num_pixs_obj,'descend'); % num_pixs_obj may be cell = cellfun
         bObj =  boolArray(ind_mayores(1:n));
     end
 
@@ -53,10 +54,9 @@ end
             losObjs = unique(seg_objects);
             [~,el_que_importa] =  max(histc(seg_objects, losObjs));
             el_que_importa = losObjs(el_que_importa);
-            s(idx) = sum(sum(and(bObj{1}{idx},im_seg(el_que_importa))))/sum(sum(or(bObj{1}{idx},im_seg(el_que_importa))));
+            s(idx) = sum(sum(and(bObj{1}{idx},im_seg == el_que_importa)))/sum(sum(or(bObj{1}{idx},im_seg == el_que_importa)));
         end
         Jacc = mean(s);
     end 
 
 end
-
